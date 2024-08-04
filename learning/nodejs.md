@@ -1,3 +1,13 @@
+## Nodejs 
+- Developed by Ryan Dahl
+
+## Javascript Engines 
+- V8 - Developed by Google, used in Chrome and Node.js.
+- SpiderMonkey - Developed by Mozilla, used in Firefox.
+- JavaScriptCore (JSC) - Developed by Apple, used in Safari.
+- Chakra - Developed by Microsoft, used in older versions of Edge (pre-Chromium).
+- Hermes - Developed by Facebook, used in React Native.
+
 ## Globals
 
 - console
@@ -628,9 +638,9 @@ isNaN(x); // true
 
 
 ## Functions
-- Arrow Functions
-    - Arrow functions provide a shorter syntax for writing function expressions and come with some important differences from traditional functions, especially regarding the handling of the this keyword.
-### No arguments Object:
+### Arrow Functions
+- Arrow functions provide a shorter syntax for writing function expressions and come with some important differences from traditional functions, especially regarding the handling of the this keyword.
+#### No arguments Object:
 ```
 const showArgs = (...args) => {
   console.log(args);
@@ -638,16 +648,83 @@ const showArgs = (...args) => {
 showArgs(1, 2, 3); // [1, 2, 3]
 ```
 
-### Cannot be Used as Constructors:
+#### Cannot be Used as Constructors:
 ```
 const Foo = () => {};
 const foo = new Foo(); // TypeError: Foo is not a constructor
 ```
 
+### IIFE (Immediately Invoked Function Expression) Function
+- function that runs as soon as it is defined
+```
+(function() {
+    // Code here runs immediately
+    console.log('IIFE executed!');
+})();
+
+(function myIIFE() {
+    console.log('Named IIFE executed!');
+})();
+
+(() => {
+    console.log('Arrow function IIFE executed!');
+})();
+```
 
 
+## Chaining & Curring
+- Chaining is a programming pattern that allows you to call multiple methods on the same object consecutively in a single statement.
+```
+class Calculator {
+  constructor(value = 0) {
+    this.value = value;
+  }
 
+  add(num) {
+    this.value += num;
+    return this; // Returning this allows for chaining
+  }
 
+  subtract(num) {
+    this.value -= num;
+    return this; // Returning this allows for chaining
+  }
+
+  multiply(num) {
+    this.value *= num;
+    return this; // Returning this allows for chaining
+  }
+
+  divide(num) {
+    this.value /= num;
+    return this; // Returning this allows for chaining
+  }
+
+  getValue() {
+    return this.value;
+  }
+}
+
+const result = new Calculator(10)
+  .add(5)
+  .subtract(3)
+  .multiply(2)
+  .divide(4)
+  .getValue();
+
+console.log(result); // Outputs: 6
+```
+- Currying is a functional programming technique where a function with multiple arguments is transformed into a sequence of functions, each taking a single argument.
+```
+const multiply = a => b => c => a * b * c;
+
+const multiplyBy2 = multiply(2); // Partially applying with 2
+const multiplyBy2And3 = multiplyBy2(3); // Partially applying with 3
+
+console.log(multiplyBy2And3(4)); // Outputs: 24
+console.log(multiply(2)(3)(4)); // Outputs: 24 (directly calling the curried function)
+
+```
 
 ## Error Handling
 
@@ -998,6 +1075,14 @@ function showThis() {
   console.log(this);
 }
 showThis(); // Window object (in non-strict mode), undefined (in strict mode)
+
+function a() {
+  console.log(this); // Nodes globalThis
+}
+
+const b = () => {
+  console.log(this); // Empty Object
+};
 ```
 ### Method Context:
 - When a function is called as a method of an object, `this` refers to the object that the method is called on.
@@ -1039,6 +1124,65 @@ button.addEventListener('click', function() {
   console.log(this); // The button element
 });
 ```
+### Call Apply Bind
+#### `call` Method
+- The call method calls a function with a given this value and arguments provided individually.
+```
+// function.call(thisArg, arg1, arg2, ...)
+
+const person = {
+  firstName: 'John',
+  lastName: 'Doe',
+  fullName: function() {
+    return this.firstName + ' ' + this.lastName;
+  }
+};
+
+const anotherPerson = {
+  firstName: 'Jane',
+  lastName: 'Smith'
+};
+
+// Using call to invoke fullName with anotherPerson as the this context
+console.log(person.fullName.call(anotherPerson)); // Output: Jane Smith
+```
+#### `apply` Method
+- The apply method calls a function with a given this value and arguments provided as an array (or an array-like object).
+```
+// function.apply(thisArg, [argsArray])
+
+const numbers = [5, 6, 2, 3, 7];
+
+const max = Math.max.apply(null, numbers);
+console.log(max); // Output: 7
+
+const min = Math.min.apply(null, numbers);
+console.log(min); // Output: 2
+```
+#### `bind` Method
+- The bind method creates a new function that, when called, has its this keyword set to the provided value, with a given sequence of arguments preceding any provided when the new function is called.
+```
+// function.bind(thisArg, arg1, arg2, ...)
+
+const person = {
+  firstName: 'John',
+  lastName: 'Doe',
+  fullName: function() {
+    return this.firstName + ' ' + this.lastName;
+  }
+};
+
+const anotherPerson = {
+  firstName: 'Jane',
+  lastName: 'Smith'
+};
+
+// Using bind to create a new function with anotherPerson as the this context
+const fullNameBound = person.fullName.bind(anotherPerson);
+
+console.log(fullNameBound()); 
+```
+
 
 ## Callbacks
 - Function pass as a parameter to unother function.
@@ -1164,6 +1308,44 @@ async function myAsyncFunction() {
 ```
 const result = await promise;
 ```
+
+## Generator
+- Generators are a powerful feature in JavaScript that allow you to define an iterative algorithm by writing a function that can be paused and resumed. They are defined using the function* syntax and yield multiple values over time, making them useful for handling sequences of values, managing asynchronous operations, and more.
+```
+function* simpleGenerator() {
+  yield 1;
+  yield 2;
+  yield 3;
+}
+
+const gen = simpleGenerator();
+
+console.log(gen.next()); // { value: 1, done: false }
+console.log(gen.next()); // { value: 2, done: false }
+console.log(gen.next()); // { value: 3, done: false }
+console.log(gen.next()); // { value: undefined, done: true }
+```
+
+
+## Event Emitter
+- Handle asynchronous operations by emitting and listening to events.
+- `EventEmitter` Class: A core module in Node.js that provides the mechanism to create and manage events.
+- `Event Listeners`: Functions that are called when an event is emitted.
+- `Emitting Events`: Triggering an event which then calls all the registered listeners for that event.
+```
+const EventEmitter = require('events');
+
+const myEmitter = new EventEmitter();
+
+myEmitter.on('eventWithArgs', (arg1, arg2) => {
+  console.log(`Event with args: ${arg1}, ${arg2}`);
+});
+
+myEmitter.emit('eventWithArgs', 'Hello', 'World');
+
+```
+
+
 
 ## Prototypes
     - Each object in JavaScript has a prototype, which acts as a template or a blueprint for the object. It defines the object's properties and methods.
@@ -1607,7 +1789,6 @@ Object.seal(person);
 person.age = 30; // No effect
 ```
 
-
 ## Array Methods
 
 ### Array Creation
@@ -1929,17 +2110,6 @@ function arraysEqual(a, b) {
 console.log(arraysEqual(arr1, arr2)); // true
 ```
 
-
-
-
-
-
-
-
-
-
-
-
 # Node Build in Modules
 - fs (File System)
 - path
@@ -1959,12 +2129,16 @@ console.log(arraysEqual(arr1, arr2)); // true
 ## NPM YARN PNPM - Package managers
 
 # Importent backend developement guide for security
-
 - Check the size of payload (In case someone put 10 GB of file onto your server it will crash that server)
 - Type of payload to prevent the NoSQL injections (use library called joi)
-- Rate limiting
+- Rate limiting (DDOS Protection)
 - Encryption of sensitive data ( credit card, password and all )
 - HTTPS
+- CORS restriction
+- Set Security Headers using `helmet` module
+- Compress the response payload using `compression` module
+- Caching 
+- Concurrency `p-limit`
 
 # Authentication    
 - Authentication is the process of verifying the identity of a user or system. It is about ensuring that the entity requesting access is who it claims to be. Authentication typically involves validating credentials.
@@ -1981,11 +2155,17 @@ console.log(arraysEqual(arr1, arr2)); // true
 
 # JWT
 - JWT, or `JSON Web Token`, is a compact, URL-safe token format used for securely transmitting information between parties. It is commonly used for authentication and information exchange in web applications and APIs.
+- JWT do not have default exipration time.
 - JWT is composed of three parts separated by dots (.):
     - Header
+      - The header typically consists of two parts: the type of the token, which is JWT, and the signing algorithm being used, such as HMAC SHA256 or RSA.
     - Payload
+      - The payload contains the claims. Claims are statements about an entity (typically, the user) and additional metadata. There are three types of claims: registered, public, and private claims.
     - Signature
-
+      - To create the signature part, you have to take the encoded header, the encoded payload, a secret, the algorithm specified in the header, and sign that.
+```
+header.payload.signature
+```
 
 # Express JS starter
 ```
@@ -2001,6 +2181,79 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 ```
+
+# child process
+- Child processes allow you to spawn and manage external processes from your Node.js application. 
+- This is useful for tasks like running shell commands, executing scripts, or performing tasks that are CPU-intensive and should not block the main event loop.
+
+## child_process Module
+- The child_process module is part of Node.js's standard library and provides methods to spawn and manage child processes.
+
+### Key Methods
+- exec: Executes a shell command and buffers the output.
+- execFile: Executes a file directly without using a shell.
+- spawn: Launches a new process with a given command.
+- fork: Spawns a new Node.js process and establishes communication via IPC (Inter-Process Communication).
+```
+const { exec } = require('child_process');
+
+exec('ls -l', (error, stdout, stderr) => {
+  if (error) {
+    console.error(`Error: ${error}`);
+    return;
+  }
+  if (stderr) {
+    console.error(`stderr: ${stderr}`);
+    return;
+  }
+  console.log(`stdout: ${stdout}`);
+});
+```
+
+# HTTP Request 
+## GET
+- Purpose: Retrieve data from the server.
+- Idempotency: Yes (repeated requests yield the same result).
+- Request Body: Not typically used. But can be send upto 2,083 characters
+- Use Case: Fetching data or resources.
+- Example: GET /users/123 retrieves the user with ID 123.
+## POST
+- Purpose: Send data to the server to create a new resource.
+- Idempotency: No (multiple identical requests may create multiple resources).
+- Request Body: Contains data to be processed.
+- Use Case: Creating new resources or submitting data.
+- Example: POST /users with a body { "name": "John Doe", "email": "john.doe@example.com" } creates a new user.
+## PUT
+- Purpose: Update an existing resource or create a new resource if it does not exist.
+- Idempotency: Yes (multiple identical requests result in the same resource state).
+- Request Body: Contains the full representation of the resource.
+- Use Case: Replacing or updating a resource with a known identifier.
+- Example: PUT /users/123 with a body { "name": "John Doe", "email": "john.doe@example.com" } replaces the user with ID 123.
+## PATCH
+- Purpose: Apply partial updates to a resource.
+- Idempotency: Not necessarily (but often designed to be).
+- Request Body: Contains only the fields to be updated.
+- Use Case: Updating specific parts of a resource.
+- Example: PATCH /users/123 with a body { "email": "john.newemail@example.com" } updates only the email of the user with ID 123.
+## DELETE
+- Purpose: Remove a resource from the server.
+- Idempotency: Yes (repeated requests have the same effect).
+- Request Body: Not typically used.
+- Use Case: Deleting resources.
+- Example: DELETE /users/123 deletes the user with ID 123.
+## HEAD
+- Purpose: Retrieve the headers of a resource, without the body.
+- Idempotency: Yes.
+- Request Body: Not used.
+- Use Case: Checking metadata or existence of a resource.
+- Example: HEAD /users/123 retrieves headers for the user with ID 123.
+## OPTIONS
+- Purpose: Describe the communication options for a resource. (CORS Alllowed)
+- Idempotency: Yes.
+- Request Body: Not used.
+- Use Case: Discovering allowed methods and capabilities of a resource.
+- Example: OPTIONS /users/123 returns the methods supported for the user with ID 123.
+
 
 # Problems:
 
