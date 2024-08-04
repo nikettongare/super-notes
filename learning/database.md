@@ -238,6 +238,28 @@ SELECT column1, COUNT(*) FROM table_name GROUP BY column1 HAVING COUNT(*) > 1;
 SELECT column1 FROM table_name WHERE column2 IN (SELECT column2 FROM another_table);
 ```
 
+# `UNION` and `UNION ALL`
+
+## UNION
+- Combines the results of two or more SELECT statements and removes duplicate rows from the result set.
+- When you need a distinct list of results.
+- Generally slower than UNION ALL because it has to perform an additional step to remove duplicates.
+```
+SELECT employee_name FROM employees
+UNION
+SELECT manager_name FROM managers;
+```
+
+## UNION ALL
+- Combines the results of two or more SELECT statements and includes all duplicate rows.
+- When you need all rows from the combined result sets, including duplicates.
+-  Generally faster than UNION because it does not have to check for and remove duplicates.
+```
+SELECT employee_name FROM employees
+UNION ALL
+SELECT manager_name FROM managers;
+```
+
 # Constraints
 ## NOT NULL
 - Ensures that a column cannot have NULL values.
@@ -276,11 +298,15 @@ CREATE TABLE users (
     name VARCHAR(50)
 );
 ```
-
-
-
-
-
+## CHECK
+- Ensures that values in a column meet a specific condition or set of conditions.
+- Enforces domain integrity by restricting the values that can be entered into a column.
+```
+CREATE TABLE employees (
+    id INT PRIMARY KEY,
+    salary DECIMAL(10, 2) CHECK (salary > 0)
+);
+```
 
 
 # Primary Key
@@ -292,6 +318,19 @@ CREATE TABLE users (
     name VARCHAR(50)
 );
 ```
+# Composite Primary Key
+- A composite primary key in a database is a primary key that consists of two or more columns, used together to uniquely identify each row in a table. 
+- This is typically used when a single column is not sufficient to ensure row uniqueness.
+- Combination of multiple column shoud be unique.
+```
+CREATE TABLE enrollments (
+    student_id INT,
+    course_id INT,
+    enrollment_date DATE,
+    PRIMARY KEY (student_id, course_id)
+);
+```
+
 # Foreign Key
 - Ensures referential integrity by linking a column (or a set of columns) in one table to the primary key of another table.
 - Maintains relationships between tables and ensures that a value in the foreign key column must match a value in the primary key column of the referenced table.
@@ -337,6 +376,19 @@ ROLLBACK;
 # Indexing
 - Indexing in a database is a technique used to improve the speed and efficiency of data retrieval operations. An index is a data structure that provides a fast way to look up records based on the values of one or more columns in a table. 
 - Just like an index in a book helps you quickly find the page where a topic is discussed, a database index allows the database engine to quickly find rows in a table without scanning the entire table.
+
+## Clustered Index
+- A clustered index sorts and stores the data rows of the table based on the key values.
+- It defines the physical order of data in the table. There can be only one clustered index per table because the data rows themselves can be sorted in only one order.
+### Structure:
+- The data rows are stored in a B-tree structure with the leaf nodes containing the actual data pages.
+
+## Non-Clustered Index
+- A non-clustered index creates a separate structure to maintain the index and does not affect the order of the data rows in the table.
+- It contains pointers to the actual data rows.
+### Structure
+- The non-clustered index also uses a B-tree structure, but the leaf nodes contain pointers (row identifiers) to the actual data pages rather than the data itself.
+
 ## Primary Index
 - Automatically created when a primary key is defined.
 - Ensures that the values in the primary key column are unique and not null.
@@ -360,6 +412,7 @@ CREATE INDEX idx_name ON users(name);
 ```
 ## Composite Index
 - An index on multiple columns.
+- B-tree (data structure) type off index
 ```
 CREATE INDEX idx_name_email ON users(name, email);
 ```
@@ -433,7 +486,6 @@ END;
 - `RANK()`: Assigns a unique rank to each row within a partition of a result set. Rows with the same values receive the same rank, and the next rank is incremented by the number of duplicates. This means there may be gaps in the ranking.
 ## Dense Rank
 - `DENSE_RANK()`: Similar to RANK(), but without gaps. Rows with the same values receive the same rank, and the next rank is incremented by 1.
-
 ### Simple Using Order By 
 ```
 SELECT 
@@ -501,6 +553,13 @@ FROM
 6	David Wilson	Male	Sales Manager	80000.00	3
 ```
 
+# Cursor
+- A cursor in a database is a database object used to retrieve, manipulate, and navigate through a result set row by row. Cursors are typically used in procedural programming and are essential for scenarios where row-by-row processing of data is necessary, which can't be efficiently achieved with set-based SQL operations alone.
+
+# Cascading 
+- `cascade` refers to the automatic propagation of changes from one table to related tables when a specific action is performed. 
+- This concept is primarily used in the context of foreign key constraints in relational databases. 
+- Cascading actions ensure data integrity and consistency across related tables.
 
 # ACID properties
 
@@ -513,6 +572,69 @@ FROM
 ## Durability
 - Durability ensures that once a transaction has been committed, its effects are permanently recorded in the database, even in the case of a system crash or failure. Committed data survives permanent failures and system restarts.
 
+
+# Normalization
+- Normalization is a process in database design that aims to minimize redundancy and dependency by organizing fields and table relationships in a database.
+- Dividing single table containing duplicate data into multiple table is Normalization.
+
+## First Normal Form (1NF) (one to many) 
+- The table must have atomic (indivisible) values, and each column should contain only one value per row.
+- Eliminate repeating groups and ensure data is stored in a tabular format.
+```
+CREATE TABLE employees (
+    employee_id INT,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50)
+);
+
+CREATE TABLE employee_emails (
+    employee_id INT,
+    email VARCHAR(100),
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+);
+```
+## Second Normal Form (2NF) (one to many + dependancy on other table) 
+- The table must be in 1NF, and all non-key attributes must be fully functionally dependent on the primary key.
+- Eliminate partial dependencies (where a non-key attribute is dependent on part of a composite key).
+```
+CREATE TABLE orders (
+    order_id INT,
+    product_id INT,
+    quantity INT
+);
+
+CREATE TABLE products (
+    product_id INT,
+    product_name VARCHAR(100),
+    price DECIMAL(10, 2)
+);
+```
+## Third Normal Form (3NF)
+- The table must be in 2NF, and all attributes must be directly dependent on the primary key.
+- Eliminate transitive dependencies (where a non-key attribute depends on another non-key attribute).
+```
+CREATE TABLE employees (
+    employee_id INT,
+    department_id INT
+);
+
+CREATE TABLE departments (
+    department_id INT,
+    department_name VARCHAR(100)
+);
+```
+
+# Differece between Primary key and Unique Key
+```
+Primary key                                  Unique Key
+
+UNIUQE + NOT NULL                           UNIUQE
+Single per table                            Can be multiple
+Composite Primary Key                       Nullability
+Indexing (Clustered)                        Indexing (Non-Clustered)
+Identification
+
+```
 # update all the male to female and female to male 
 ```
 userdata 
@@ -550,4 +672,58 @@ SET gender = CASE id
         WHEN 11 THEN 'Female'
     ELSE 'Unknown'
 END;
+```
+
+# Remove duplicate records from table
+## Using `DELETE` with a `Subquery`
+- For each group, this selects the smallest employee_id. This ensures that the smallest employee_id for each unique combination is retained.
+```
+DELETE FROM employees
+WHERE id NOT IN (
+    SELECT MIN(id)
+    FROM employees
+    GROUP BY first_name, last_name, email
+);
+
+-- Subquery Check
+ SELECT MIN(id) FROM employees GROUP BY name, salary;
+-- Subquery output:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+```
+## Using Temporary Table
+- Another method involves creating a temporary table to hold unique records and then replacing the original table with this temporary table.
+```
+-- Create a temporary table with distinct records
+CREATE TABLE employees_temp AS
+SELECT DISTINCT employee_id, first_name, last_name, email
+FROM employees;
+
+-- Drop the original table
+DROP TABLE employees;
+
+-- Rename the temporary table to the original table name
+ALTER TABLE employees_temp RENAME TO employees;
+```
+
+# Employe Manager Self join
+```
+SELECT 
+    e1.employee_name AS employee,
+    e2.employee_name AS manager
+FROM 
+    employees e1
+LEFT JOIN 
+    employees e2
+ON 
+    e1.manager_id = e2.employee_id;
 ```
