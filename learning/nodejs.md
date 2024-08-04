@@ -9,7 +9,6 @@
 - Hermes - Developed by Facebook, used in React Native.
 
 ## Globals
-
 - console
 - proccess
 - global
@@ -23,7 +22,6 @@
 - module
 
 ## Event loop - Non-blocking
-
 - JavaScript's asynchronous nature, facilitating non-blocking I/O operations and concurrency within the language. It's fundamental to how JavaScript handles asynchronous tasks.
 - JavaScript is single-threaded, meaning it can only execute one operation at a time. However, it can perform asynchronous operations without blocking other code execution. These asynchronous tasks include timers (setTimeout, setInterval), I/O operations (fetch, reading files), and callbacks (promises, async/await).
   - Call Stack: JavaScript maintains a call stack to keep track of function calls and their execution contexts (where the code is).
@@ -1094,6 +1092,10 @@ const person = {
   }
 };
 person.greet(); // 'Alice'
+
+const a = person.greet
+
+a() // undefinde
 ```
 ### Constructor Context:
 - When a function is used as a constructor with the `new` keyword, `this` refers to the new object being created.
@@ -1519,6 +1521,9 @@ let combined = str1 + str2; // "Hello, world!"
 
 let name = 'John';
 let greeting = `Hello, ${name}!`; // "Hello, John!"
+
+let greet = 'hello'.concat(' world');
+
 ```
 
 ### Template Literals

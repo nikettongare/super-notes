@@ -1,10 +1,8 @@
 # Tell me about yourselft
 
-First of all, thank you for giving me the opportunity to introduce myself.
+As you know my name is Niket Tongare, and I live in Chatrapatti Sambhaji Nagar, Maharashtra.
 
-I am Niket Tongare, and I live in Chatrapatti Sambhaji Nagar, Maharashtra.
-
-I recently completed my post-graduation from MGM University with an SGPA of 8.8. Before that, I did my graduation at the same university.
+I recently completed my post-graduation from MGM University. Before that, I did my graduation at the same university.
 
 I have done part-time freelancing for three years, where I provided services to develop Flutter and MERN stack applications.
 
@@ -23,14 +21,19 @@ That's all about me.
 # Why should we hire you?
 
 I believe, I'm a greate fit because I have the right skills and experience. 
-
 I am passionated about this field.  
-
- I'm adaptable and always looking to improve processes. Overall, my skills, experience, and enthusiasm make me a strong candidate for this role.
+I'm adaptable and always looking to improve processes. Overall, my skills, experience, and enthusiasm make me a strong candidate for this role.
 I have a strong track record in solving problems, communicating effectively, and working well with others.
 
-# What are your strengths ?
-# What are your weekness ?
+# Strengths:
+- Quick Learner: Demonstrates the ability to rapidly acquire new skills and adapt to new concepts.
+- Focused: Maintains a high level of concentration and attention to detail in all tasks.
+
+# Weaknesses:
+- Workaholic: Tends to overcommit to work responsibilities, which can sometimes lead to challenges in maintaining work-life balance.
+- Persistent Problem-Solver: Exhibits a strong inclination to address and resolve problems thoroughly, which can occasionally lead to spending more time on issues than necessary.
+
+
 # End Questions
 - Did a company provides us a learning assest like udemy subscription and all
 - Any suggestions for me sir
