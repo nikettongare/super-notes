@@ -318,6 +318,7 @@ CREATE TABLE users (
     name VARCHAR(50)
 );
 ```
+
 # Composite Primary Key
 - A composite primary key in a database is a primary key that consists of two or more columns, used together to uniquely identify each row in a table. 
 - This is typically used when a single column is not sufficient to ensure row uniqueness.
