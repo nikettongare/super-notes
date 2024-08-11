@@ -143,6 +143,9 @@ SELECT column1 FROM table_name WHERE column1 BETWEEN value1 AND value2;
 ```
 SELECT column1 FROM table_name WHERE column1 LIKE 'pattern';
 ```
+### _ - single unknown char
+### % - wildcard
+
 
 ## IN / NOT IN
 - Matches any value within a list.
