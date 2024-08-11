@@ -231,3 +231,47 @@ public class ContainsZeroOrNot {
     }
 }
 ```
+
+
+# Check if sum of even and odd number are equal or not
+
+package Problems;
+
+import java.util.Scanner;
+
+public class AddEvenSumEqualCheck {
+        public static void main(String[] args) {
+            Scanner scanner = new Scanner(System.in);
+
+            // Input the number
+            System.out.print("Enter the number: ");
+            int num = scanner.nextInt();
+
+            // Initialize sums for even and odd digits
+            int sumEven = 0;
+            int sumOdd = 0;
+
+            // Process each digit
+            int temp = num;
+            while (temp > 0) {
+                int digit = temp % 10;
+                if (digit % 2 == 0) {
+                    sumEven += digit;
+                } else {
+                    sumOdd += digit;
+                }
+                temp /= 10;
+            }
+
+            // Compare sums and output the result
+            if (sumEven == sumOdd) {
+                System.out.println("The sum of even digits and the sum of odd digits are the same.");
+            } else {
+                System.out.println("The sum of even digits and the sum of odd digits are different.");
+            }
+
+            scanner.close();
+        }
+
+
+}
