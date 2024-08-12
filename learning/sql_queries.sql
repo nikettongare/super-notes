@@ -1,3 +1,88 @@
+-- 12/08/2024
+
+-- Employees Table
+```
+CREATE TABLE Employees (
+    employee_id INT PRIMARY KEY,
+    name VARCHAR(50),
+    department_id INT
+);
+
+INSERT INTO Employees (employee_id, name, department_id) VALUES
+(1, 'Alice', 101),
+(2, 'Bob', 102),
+(3, 'Charlie', 101),
+(4, 'David', 103),
+(5, 'Eve', 102);
+```
+
+-- Departments Table
+```
+CREATE TABLE Departments (
+    department_id INT PRIMARY KEY,
+    department_name VARCHAR(50)
+);
+
+INSERT INTO Departments (department_id, department_name) VALUES
+(101, 'HR'),
+(102, 'IT'),
+(103, 'Marketing');
+```
+
+-- Projects Table
+```
+CREATE TABLE Projects (
+    project_id INT PRIMARY KEY,
+    project_name VARCHAR(50),
+    department_id INT
+);
+
+INSERT INTO Projects (project_id, project_name, department_id) VALUES
+(1, 'Project A', 101),
+(2, 'Project B', 102),
+(3, 'Project C', 101),
+(4, 'Project D', 103),
+(5, 'Project E', 102);
+```
+
+-- 1. Inner Join with Three Tables
+```
+SELECT e.name, d.department_name, p.project_name
+FROM Employees e
+INNER JOIN Departments d ON e.department_id = d.department_id
+INNER JOIN Projects p ON d.department_id = p.department_id;
+```
+
+-- 2. Count the Number of Employees per Department
+```
+SELECT d.department_name, COUNT(e.employee_id) AS num_employees
+FROM Employees e
+INNER JOIN Departments d ON e.department_id = d.department_id
+GROUP BY d.department_name;
+```
+
+-- 3. Find Departments with More Than One Project
+```
+SELECT d.department_name, COUNT(p.project_id) AS num_projects
+FROM Departments d
+INNER JOIN Projects p ON d.department_id = p.department_id
+GROUP BY d.department_name
+HAVING COUNT(p.project_id) > 1;
+```
+
+-- 4. List Departments with More Than 2 Employees and Their Projects
+```
+SELECT d.department_name, COUNT(e.employee_id) AS num_employees, COUNT(p.project_id) AS num_projects
+FROM Departments d
+INNER JOIN Employees e ON d.department_id = e.department_id
+INNER JOIN Projects p ON d.department_id = p.department_id
+GROUP BY d.department_name
+HAVING COUNT(e.employee_id) > 2;
+```
+
+
+
+-- 10/08/2024
 
 -- 9. WAQTD number of employees hired before ‘ALLEN’ in ‘RESEARCH’ department using joins.
 
