@@ -1,86 +1,91 @@
 -- 12/08/2024
 
--- Employees Table
+-- Orders Table
 ```
-CREATE TABLE Employees (
-    employee_id INT PRIMARY KEY,
-    name VARCHAR(50),
-    department_id INT
+CREATE TABLE Orders (
+    order_id INT PRIMARY KEY,
+    customer_id INT,
+    product_id INT,
+    order_date DATE,
+    quantity INT
 );
 
-INSERT INTO Employees (employee_id, name, department_id) VALUES
-(1, 'Alice', 101),
-(2, 'Bob', 102),
-(3, 'Charlie', 101),
-(4, 'David', 103),
-(5, 'Eve', 102);
+INSERT INTO Orders (order_id, customer_id, product_id, order_date, quantity) VALUES
+(1, 101, 201, '2024-01-15', 5),
+(2, 102, 202, '2024-02-17', 3),
+(3, 103, 201, '2024-03-22', 2),
+(4, 101, 203, '2024-04-05', 1),
+(5, 104, 202, '2024-05-12', 4);
 ```
 
--- Departments Table
+
+-- Customers Table
 ```
-CREATE TABLE Departments (
-    department_id INT PRIMARY KEY,
-    department_name VARCHAR(50)
+CREATE TABLE Customers (
+    customer_id INT PRIMARY KEY,
+    customer_name VARCHAR(50),
+    city VARCHAR(50)
 );
 
-INSERT INTO Departments (department_id, department_name) VALUES
-(101, 'HR'),
-(102, 'IT'),
-(103, 'Marketing');
+INSERT INTO Customers (customer_id, customer_name, city) VALUES
+(101, 'Alice', 'New York'),
+(102, 'Bob', 'Los Angeles'),
+(103, 'Charlie', 'Chicago'),
+(104, 'David', 'Houston');
 ```
 
--- Projects Table
+
+-- Products Table
 ```
-CREATE TABLE Projects (
-    project_id INT PRIMARY KEY,
-    project_name VARCHAR(50),
-    department_id INT
+CREATE TABLE Products (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(50),
+    price DECIMAL(10, 2)
 );
 
-INSERT INTO Projects (project_id, project_name, department_id) VALUES
-(1, 'Project A', 101),
-(2, 'Project B', 102),
-(3, 'Project C', 101),
-(4, 'Project D', 103),
-(5, 'Project E', 102);
+INSERT INTO Products (product_id, product_name, price) VALUES
+(201, 'Laptop', 1200.00),
+(202, 'Smartphone', 800.00),
+(203, 'Tablet', 500.00);
 ```
+
 
 -- 1. Inner Join with Three Tables
 ```
-SELECT e.name, d.department_name, p.project_name
-FROM Employees e
-INNER JOIN Departments d ON e.department_id = d.department_id
-INNER JOIN Projects p ON d.department_id = p.department_id;
-```
-
--- 2. Count the Number of Employees per Department
-```
-SELECT d.department_name, COUNT(e.employee_id) AS num_employees
-FROM Employees e
-INNER JOIN Departments d ON e.department_id = d.department_id
-GROUP BY d.department_name;
-```
-
--- 3. Find Departments with More Than One Project
-```
-SELECT d.department_name, COUNT(p.project_id) AS num_projects
-FROM Departments d
-INNER JOIN Projects p ON d.department_id = p.department_id
-GROUP BY d.department_name
-HAVING COUNT(p.project_id) > 1;
-```
-
--- 4. List Departments with More Than 2 Employees and Their Projects
-```
-SELECT d.department_name, COUNT(e.employee_id) AS num_employees, COUNT(p.project_id) AS num_projects
-FROM Departments d
-INNER JOIN Employees e ON d.department_id = e.department_id
-INNER JOIN Projects p ON d.department_id = p.department_id
-GROUP BY d.department_name
-HAVING COUNT(e.employee_id) > 2;
+SELECT o.order_id, c.customer_name, p.product_name, o.quantity, o.order_date
+FROM Orders o
+INNER JOIN Customers c ON o.customer_id = c.customer_id
+INNER JOIN Products p ON o.product_id = p.product_id;
 ```
 
 
+-- 2. Total Quantity Ordered by Each Customer
+```
+SELECT c.customer_name, SUM(o.quantity) AS total_quantity
+FROM Orders o
+INNER JOIN Customers c ON o.customer_id = c.customer_id
+GROUP BY c.customer_name;
+```
+
+
+-- 3. Find Products with Total Quantity Ordered Greater Than 4
+```
+SELECT p.product_name, SUM(o.quantity) AS total_quantity_ordered
+FROM Orders o
+INNER JOIN Products p ON o.product_id = p.product_id
+GROUP BY p.product_name
+HAVING SUM(o.quantity) > 4;
+```
+
+
+-- 4. List Cities with More Than 1 Customer and Their Total Orders
+```
+SELECT c.city, COUNT(DISTINCT c.customer_id) AS num_customers, COUNT(o.order_id) AS total_orders
+FROM Customers c
+INNER JOIN Orders o ON c.customer_id = o.customer_id
+GROUP BY c.city
+HAVING COUNT(DISTINCT c.customer_id) > 1;
+```
 
 -- 10/08/2024
 
