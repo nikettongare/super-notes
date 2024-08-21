@@ -557,6 +557,18 @@ FROM
 6	David Wilson	Male	Sales Manager	80000.00	3
 ```
 
+```
+SELECT * FROM (SELECT 
+    empno,
+    ename,
+    sal,
+    deptno,
+	DENSE_RANK() OVER (ORDER BY sal DESC) as salary_dense_rank
+FROM 
+    emp) table1 where salary_dense_rank=2;
+```
+
+
 # Cursor
 - A cursor in a database is a database object used to retrieve, manipulate, and navigate through a result set row by row. Cursors are typically used in procedural programming and are essential for scenarios where row-by-row processing of data is necessary, which can't be efficiently achieved with set-based SQL operations alone.
 
@@ -731,3 +743,6 @@ LEFT JOIN
 ON 
     e1.manager_id = e2.employee_id;
 ```
+
+
+# SUDO COLUMENS
